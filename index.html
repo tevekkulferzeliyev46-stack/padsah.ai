@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="az">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#10131b">
+<title>PADŞAH AI</title>
+<style>
+:root{--bg:#0d1117;--panel:#151b25;--panel2:#1d2633;--line:#2a3545;--gold:#e7bd61;--txt:#f4f6f8;--muted:#aab4c2}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.55 system-ui,Arial,sans-serif}
+.app{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+aside{background:#10151e;border-right:1px solid var(--line);padding:20px 14px;display:flex;flex-direction:column;gap:18px}
+.logo{display:flex;align-items:center;gap:10px;padding:5px 8px}.crown{font-size:28px;color:var(--gold)}.logo strong{font-size:19px;letter-spacing:1.4px;color:var(--gold)}.logo small{display:block;color:var(--muted);font-size:11px}
+.newchat{width:100%;border:1px solid var(--line);background:var(--panel);color:var(--txt);padding:11px;border-radius:12px;text-align:left;cursor:pointer}
+.menu{display:grid;gap:5px}.menu button{border:0;background:transparent;color:var(--muted);text-align:left;padding:10px;border-radius:10px;cursor:pointer}.menu button:hover,.menu button.active{background:var(--panel2);color:var(--gold)}
+.sidefoot{margin-top:auto;color:var(--muted);font-size:12px;padding:8px}
+main{display:flex;flex-direction:column;min-width:0;min-height:100vh}.top{height:62px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 24px}.top span{color:var(--muted);font-size:13px}
+.content{width:min(850px,100%);margin:0 auto;padding:32px 22px 150px;flex:1}.welcome{text-align:center;margin:9vh auto 34px}.welcome .big{font-size:43px;color:var(--gold)}h1{font-size:30px;margin:5px 0}.welcome p{color:var(--muted);margin:7px}
+.suggestions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:25px auto;max-width:650px}.suggestions button,.toolbtn{border:1px solid var(--line);background:var(--panel);color:var(--txt);padding:13px;border-radius:13px;text-align:left;cursor:pointer}.suggestions button:hover,.toolbtn:hover{border-color:var(--gold)}
+.chat{display:grid;gap:18px}.msg{display:flex;gap:12px;align-items:flex-start}.avatar{width:31px;height:31px;border-radius:50%;display:grid;place-items:center;background:var(--panel2);color:var(--gold);flex:none}.bubble{white-space:pre-wrap;max-width:100%;padding:5px 0}.msg.user .avatar{background:#26364a;color:#fff}.msg.user .bubble{background:var(--panel);padding:11px 14px;border-radius:14px}
+.composer-wrap{position:fixed;bottom:0;left:260px;right:0;background:linear-gradient(transparent,var(--bg) 22%);padding:25px 22px 18px}.composer{max-width:800px;margin:auto;background:var(--panel);border:1px solid #3a4657;border-radius:17px;padding:10px;display:flex;gap:8px;align-items:flex-end;box-shadow:0 10px 35px #0005}.composer textarea{flex:1;resize:none;min-height:45px;max-height:140px;background:transparent;border:0;outline:0;color:var(--txt);font:inherit;padding:10px}.send{background:var(--gold);border:0;border-radius:11px;width:43px;height:43px;font-size:19px;cursor:pointer;color:#17130b}.hint{text-align:center;color:var(--muted);font-size:11px;margin:8px}
+.page{display:none}.page.active{display:block}.panel{background:var(--panel);border:1px solid var(--line);padding:20px;border-radius:16px;margin-bottom:13px}.panel h2{margin:0 0 8px;color:var(--gold)}.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.pill{display:inline-block;border:1px solid var(--line);border-radius:30px;padding:5px 10px;color:var(--muted);font-size:12px;margin:3px}
+@media(max-width:720px){.app{grid-template-columns:1fr}aside{position:sticky;top:0;z-index:4;padding:10px 12px;border-right:0;border-bottom:1px solid var(--line)}.logo{padding:0}.crown{font-size:22px}.logo strong{font-size:16px}.newchat{display:none}.menu{display:flex;overflow-x:auto}.menu button{white-space:nowrap;padding:8px}.sidefoot{display:none}.top{height:45px;padding:0 15px}.content{padding:20px 14px 140px}.welcome{margin:6vh auto 25px}.welcome .big{font-size:34px}h1{font-size:25px}.composer-wrap{left:0;padding:12px 12px 10px}.suggestions{grid-template-columns:1fr}.suggestions button{padding:10px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+ <div class="logo"><span class="crown">♛</span><div><strong>PADŞAH AI</strong><small>Tarix • Siyasət • Hava • Riyaziyyat</small></div></div>
+ <button class="newchat" onclick="newChat()">＋ Yeni söhbət</button>
+ <nav class="menu">
+  <button class="active" data-page="chat">✦ AI ilə söhbət</button>
+  <button data-page="history">📚 Tarix</button>
+  <button data-page="politics">🏛️ Siyasət və xəbərlər</button>
+  <button data-page="weather">🌤️ Hava</button>
+  <button data-page="math">🧮 Riyaziyyat</button>
+  <button data-page="about">♛ Haqqında</button>
+ </nav>
+ <div class="sidefoot">Yaradıcısı: Təvəkkül bəy<br>İlkin pulsuz versiya</div>
+</aside>
+<main>
+ <div class="top"><b id="topTitle">AI ilə söhbət</b><span>İlkin versiya</span></div>
+ <div class="content">
+  <section class="page active" id="chat">
+   <div class="welcome" id="welcome"><div class="big">♛</div><h1>PADŞAH AI</h1><p>Salam! Nə öyrənmək istəyirsən?</p>
+    <div class="suggestions">
+     <button onclick="ask('Herodot kimdir?')">📚 Herodot kimdir?</button>
+     <button onclick="ask('Məhəmməd Əmin Rəsulzadə kimdir?')">🇦🇿 Rəsulzadə kimdir?</button>
+     <button onclick="ask('Bu gün dünyada hansı xəbərlər var?')">📰 Bugünkü xəbərlər</button>
+     <button onclick="ask('2x + 5 = 15 tənliyini həll et')">🧮 Riyaziyyat məsələsi</button>
+    </div>
+   </div>
+   <div class="chat" id="messages"></div>
+  </section>
+  <section class="page" id="history"><div class="panel"><h2>📚 Tarix</h2><p>PADŞAH AI tarix mövzularına cavab vermək üçün nəzərdə tutulur: Herodot, antik dünya, Azərbaycan tarixi, Məhəmməd Əmin Rəsulzadə və Azərbaycan Xalq Cümhuriyyəti.</p><p class="muted">Söhbət hissəsində istədiyin tarixi sualı yaza bilərsən. Tarixi iddialar etibarlı mənbələrlə yoxlanmalıdır.</p><button class="toolbtn" onclick="goChat('Herodot kimdir?')">Herodot haqqında soruş</button></div></section>
+  <section class="page" id="politics"><div class="panel"><h2>🏛️ Siyasət və gündəlik xəbərlər</h2><p>Bu bölmə Azərbaycan və dünya siyasəti, həmçinin gündəlik xəbərlər üçündür.</p><p class="muted">Canlı xəbər mənbəyi hələ qoşulmayıb. Bu ilkin versiya real vaxt xəbəri göstərmir. Sonrakı mərhələdə mənbə linkləri və dərc vaxtı olan xəbər axını əlavə ediləcək.</p><button class="toolbtn" onclick="goChat('Siyasət nədir?')">Siyasət haqqında soruş</button></div></section>
+  <section class="page" id="weather"><div class="panel"><h2>🌤️ Hava</h2><p>Şəhər adı yazaraq hava barədə soruşa bilərsən.</p><p class="muted">Canlı hava API-si hələ qoşulmayıb. Dəqiq temperatur göstərmək üçün hava xidməti bağlantısı lazımdır.</p><button class="toolbtn" onclick="goChat('Yevlaxda hava necədir?')">Yevlaxın havasını soruş</button></div></section>
+  <section class="page" id="math"><div class="panel"><h2>🧮 Riyaziyyat</h2><p>Tənlik, nisbət, faiz, cəbr və həndəsə məsələlərini söhbətə yaz.</p><button class="toolbtn" onclick="goChat('2x + 5 = 15 tənliyini addım-addım həll et')">Nümunə məsələ</button></div></section>
+  <section class="page" id="about"><div class="panel"><h2>♛ PADŞAH AI haqqında</h2><p><b>Yaradıcısı:</b> Təvəkkül bəy</p><p><b>Məqsəd:</b> Tarix, siyasət, hava, gündəlik xəbərlər və riyaziyyat mövzularında kömək etmək.</p><p class="muted">Bu, ilkin interfeysdir. Həqiqi AI modeli və canlı məlumat mənbələri hələ qoşulmayıb.</p></div></section>
+ </div>
+ <div class="composer-wrap" id="composerWrap"><div class="composer"><textarea id="prompt" rows="1" placeholder="PADŞAH AI-dən nə soruşmaq istəyirsən?" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea><button class="send" onclick="send()" aria-label="Göndər">➤</button></div><div class="hint">PADŞAH AI ilkin versiyadır. Cavabları vacib mövzularda yoxla.</div></div>
+</main>
+</div>
+<script>
+const titles={chat:'AI ilə söhbət',history:'Tarix',politics:'Siyasət və xəbərlər',weather:'Hava',math:'Riyaziyyat',about:'Haqqında'};
+function page(id){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.menu button').forEach(x=>x.classList.toggle('active',x.dataset.page===id));document.getElementById('topTitle').textContent=titles[id];document.getElementById('composerWrap').style.display=id==='chat'?'block':'none';}
+document.querySelectorAll('.menu button').forEach(b=>b.onclick=()=>page(b.dataset.page));
+function goChat(q){page('chat');document.getElementById('prompt').value=q;send()}
+function ask(q){document.getElementById('prompt').value=q;send()}
+function newChat(){document.getElementById('messages').innerHTML='';document.getElementById('welcome').style.display='block';}
+function addMsg(who,text){const m=document.createElement('div');m.className='msg '+who;const a=document.createElement('div');a.className='avatar';a.textContent=who==='user'?'S':'♛';const b=document.createElement('div');b.className='bubble';b.textContent=text;m.append(a,b);document.getElementById('messages').append(m);document.getElementById('welcome').style.display='none';}
+function localReply(q){
+ const s=q.toLocaleLowerCase('az');
+ if(/^(salam|salamlar|sabahın xeyir|axşamın xeyir)/.test(s))return 'Salam! Mən PADŞAH AI-yam. Tarix, siyasət, hava və riyaziyyat üzrə kömək etməyə hazıram.';
+ if(/^(sağ ol|sagol|təşəkkür|tesekkur|hələlik|xudahafiz)/.test(s))return 'Sağ ol! Yenidən görüşərik.';
+ if(s.includes('yaradıcın')||s.includes('yaradicin')||s.includes('kim yarat'))return 'Mənim yaradıcım Təvəkkül bəydir.';
+ if(s.includes('herodot'))return 'Herodot (təqribən e.ə. 5-ci əsr) Qədim Yunan tarixçisi idi. O, “Tarix” əsəri ilə tanınır və çox vaxt “tarixin atası” adlandırılır. Əsərində Yunan–Fars müharibələri və müxtəlif xalqların adətləri barədə məlumat verir. Qədim mənbələrdən istifadə etdiyi üçün bəzi məlumatları müasir tarixşünaslıqda ayrıca yoxlanılır.';
+ if(s.includes('rəsulzadə')||s.includes('resulzade'))return 'Məhəmməd Əmin Rəsulzadə (1884–1955) Azərbaycan ictimai-siyasi xadimi, jurnalist və Azərbaycan Xalq Cümhuriyyətinin qurucularından biri idi. 1918-ci il mayın 28-də elan edilən Cümhuriyyət dövründə Azərbaycan Milli Şurasına sədrlik edib. 1920-ci ildə sovet hakimiyyəti qurulduqdan sonra mühacirətdə yaşayıb.';
+ if(s.includes('tarix')||s.includes('kimdir')||s.includes('nə vaxt')||s.includes('ne vaxt'))return 'Bu tarixi sual üçün daha konkret ad, hadisə və ya tarix yaz. Məsələn: “Herodot kimdir?” və ya “Azərbaycan Xalq Cümhuriyyəti nə vaxt elan olunub?”';
+ if(s.includes('hava')||s.includes('temperatur')||s.includes('yağış')||s.includes('yagis'))return 'Canlı hava məlumatı hələ qoşulmayıb. Növbəti mərhələdə pulsuz hava xidməti əlavə edəcəyik; hazırda real temperatur deyə bilmərəm.';
+ if(s.includes('xəbər')||s.includes('xeber')||s.includes('siyasət')||s.includes('siyaset'))return 'Canlı xəbər mənbəyi hələ qoşulmayıb. Növbəti mərhələdə gündəlik xəbərləri mənbə və tarixlə göstərən pulsuz xəbər bağlantısı əlavə edəcəyik.';
+ if(/[0-9]/.test(s)&&(/[+\-*/=]/.test(s)||s.includes('hesabla')||s.includes('həll')))return 'İlkin versiyada tam riyazi AI qoşulmayıb. Növbəti mərhələdə məsələləri addım-addım həll edən riyaziyyat mühərriki əlavə edəcəyik.';
+ return 'Mən yalnız tarix, siyasət, hava və riyaziyyat mövzularında, həmçinin salamlaşma və sağollaşma üçün nəzərdə tutulmuşam. Bu ilkin versiyada canlı AI bağlantısı hələ yoxdur.';
+}
+function send(){const i=document.getElementById('prompt'),q=i.value.trim();if(!q)return;addMsg('user',q);i.value='';setTimeout(()=>addMsg('bot',localReply(q)),180);}
+</script>
+</body></html>
