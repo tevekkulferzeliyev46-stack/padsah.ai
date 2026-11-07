@@ -67,7 +67,26 @@ document.querySelectorAll('.menu button').forEach(b=>b.onclick=()=>page(b.datase
 function goChat(q){page('chat');document.getElementById('prompt').value=q;send()}
 function ask(q){document.getElementById('prompt').value=q;send()}
 function newChat(){document.getElementById('messages').innerHTML='';document.getElementById('welcome').style.display='block';}
-function addMsg(who,text){const m=document.createElement('div');m.className='msg '+who;const a=document.createElement('div');a.className='avatar';a.textContent=who==='user'?'S':'♛';const b=document.createElement('div');b.className='bubble';b.textContent=text;m.append(a,b);document.getElementById('messages').append(m);document.getElementById('welcome').style.display='none';}
+
+function addMsg(who, text) {
+  const m = document.createElement('div');
+  m.className = 'msg ' + who;
+
+  const a = document.createElement('div');
+  a.className = 'avatar';
+  a.textContent = who === 'user' ? 'S' : '♛';
+
+  const b = document.createElement('div');
+  b.className = 'bubble';
+  b.textContent = text;
+
+  m.append(a, b);
+  document.getElementById('messages').append(m);
+  document.getElementById('welcome').style.display = 'none';
+
+  return b;
+}
+
 async function send() {
   const input = document.getElementById('prompt');
   const q = input.value.trim();
@@ -77,7 +96,7 @@ async function send() {
   addMsg('user', q);
   input.value = '';
 
-  addMsg('bot', 'PADŞAH AI cavab hazırlayır...');
+  const botBubble = addMsg('bot', 'PADŞAH AI cavab hazırlayır...');
 
   try {
     const response = await fetch(
@@ -95,22 +114,13 @@ async function send() {
     );
 
     const data = await response.json();
-
-    const messages = document.querySelectorAll('.message');
-    const lastMessage = messages[messages.length - 1];
-
-    if (lastMessage) {
-      lastMessage.textContent = data.answer || data.error || 'Cavab alınmadı.';
-    }
+    botBubble.textContent =
+      data.answer || data.error || 'Cavab alınmadı.';
 
   } catch (error) {
-    const messages = document.querySelectorAll('.message');
-    const lastMessage = messages[messages.length - 1];
-
-    if (lastMessage) {
-      lastMessage.textContent = 'Serverə qoşulmaq mümkün olmadı. Yenidən yoxla.';
-    }
+    botBubble.textContent =
+      'Serverə qoşulmaq mümkün olmadı. Yenidən yoxla.';
   }
-{const i=document.getElementById('prompt'),q=i.value.trim();if(!q)return;addMsg('user',q);i.value='';setTimeout(()=>addMsg('bot',localReply(q)),180);}
+}
 </script>
 </body></html>
