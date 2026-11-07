@@ -68,19 +68,49 @@ function goChat(q){page('chat');document.getElementById('prompt').value=q;send()
 function ask(q){document.getElementById('prompt').value=q;send()}
 function newChat(){document.getElementById('messages').innerHTML='';document.getElementById('welcome').style.display='block';}
 function addMsg(who,text){const m=document.createElement('div');m.className='msg '+who;const a=document.createElement('div');a.className='avatar';a.textContent=who==='user'?'S':'♛';const b=document.createElement('div');b.className='bubble';b.textContent=text;m.append(a,b);document.getElementById('messages').append(m);document.getElementById('welcome').style.display='none';}
-function localReply(q){
- const s=q.toLocaleLowerCase('az');
- if(/^(salam|salamlar|sabahın xeyir|axşamın xeyir)/.test(s))return 'Salam! Mən PADŞAH AI-yam. Tarix, siyasət, hava və riyaziyyat üzrə kömək etməyə hazıram.';
- if(/^(sağ ol|sagol|təşəkkür|tesekkur|hələlik|xudahafiz)/.test(s))return 'Sağ ol! Yenidən görüşərik.';
- if(s.includes('yaradıcın')||s.includes('yaradicin')||s.includes('kim yarat'))return 'Mənim yaradıcım Təvəkkül bəydir.';
- if(s.includes('herodot'))return 'Herodot (təqribən e.ə. 5-ci əsr) Qədim Yunan tarixçisi idi. O, “Tarix” əsəri ilə tanınır və çox vaxt “tarixin atası” adlandırılır. Əsərində Yunan–Fars müharibələri və müxtəlif xalqların adətləri barədə məlumat verir. Qədim mənbələrdən istifadə etdiyi üçün bəzi məlumatları müasir tarixşünaslıqda ayrıca yoxlanılır.';
- if(s.includes('rəsulzadə')||s.includes('resulzade'))return 'Məhəmməd Əmin Rəsulzadə (1884–1955) Azərbaycan ictimai-siyasi xadimi, jurnalist və Azərbaycan Xalq Cümhuriyyətinin qurucularından biri idi. 1918-ci il mayın 28-də elan edilən Cümhuriyyət dövründə Azərbaycan Milli Şurasına sədrlik edib. 1920-ci ildə sovet hakimiyyəti qurulduqdan sonra mühacirətdə yaşayıb.';
- if(s.includes('tarix')||s.includes('kimdir')||s.includes('nə vaxt')||s.includes('ne vaxt'))return 'Bu tarixi sual üçün daha konkret ad, hadisə və ya tarix yaz. Məsələn: “Herodot kimdir?” və ya “Azərbaycan Xalq Cümhuriyyəti nə vaxt elan olunub?”';
- if(s.includes('hava')||s.includes('temperatur')||s.includes('yağış')||s.includes('yagis'))return 'Canlı hava məlumatı hələ qoşulmayıb. Növbəti mərhələdə pulsuz hava xidməti əlavə edəcəyik; hazırda real temperatur deyə bilmərəm.';
- if(s.includes('xəbər')||s.includes('xeber')||s.includes('siyasət')||s.includes('siyaset'))return 'Canlı xəbər mənbəyi hələ qoşulmayıb. Növbəti mərhələdə gündəlik xəbərləri mənbə və tarixlə göstərən pulsuz xəbər bağlantısı əlavə edəcəyik.';
- if(/[0-9]/.test(s)&&(/[+\-*/=]/.test(s)||s.includes('hesabla')||s.includes('həll')))return 'İlkin versiyada tam riyazi AI qoşulmayıb. Növbəti mərhələdə məsələləri addım-addım həll edən riyaziyyat mühərriki əlavə edəcəyik.';
- return 'Mən yalnız tarix, siyasət, hava və riyaziyyat mövzularında, həmçinin salamlaşma və sağollaşma üçün nəzərdə tutulmuşam. Bu ilkin versiyada canlı AI bağlantısı hələ yoxdur.';
-}
-function send(){const i=document.getElementById('prompt'),q=i.value.trim();if(!q)return;addMsg('user',q);i.value='';setTimeout(()=>addMsg('bot',localReply(q)),180);}
+async function send() {
+  const input = document.getElementById('prompt');
+  const q = input.value.trim();
+
+  if (!q) return;
+
+  addMsg('user', q);
+  input.value = '';
+
+  addMsg('bot', 'PADŞAH AI cavab hazırlayır...');
+
+  try {
+    const response = await fetch(
+      'https://padsah-ai-server.tevekkulferzeliyev46.workers.dev/',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: q,
+          mode: window.currentMode || 'special'
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    const messages = document.querySelectorAll('.message');
+    const lastMessage = messages[messages.length - 1];
+
+    if (lastMessage) {
+      lastMessage.textContent = data.answer || data.error || 'Cavab alınmadı.';
+    }
+
+  } catch (error) {
+    const messages = document.querySelectorAll('.message');
+    const lastMessage = messages[messages.length - 1];
+
+    if (lastMessage) {
+      lastMessage.textContent = 'Serverə qoşulmaq mümkün olmadı. Yenidən yoxla.';
+    }
+  }
+{const i=document.getElementById('prompt'),q=i.value.trim();if(!q)return;addMsg('user',q);i.value='';setTimeout(()=>addMsg('bot',localReply(q)),180);}
 </script>
 </body></html>
